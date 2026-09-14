@@ -1,0 +1,85 @@
+project:
+  name: "3d-radiodiff"
+  experiment_name: "pl_aff_uniform10_fullnoise_200"
+  seed: 42
+
+data:
+  train_dir: "D:/datas/processed_pl_aff_dataset/train"
+  val_dir: "D:/datas/processed_pl_aff_dataset/val"
+  test_dir: "D:/datas/processed_pl_aff_dataset/test"
+  image_size: 256
+  num_workers: 4
+  pin_memory: true
+  persistent_workers: false
+  verify_files: false
+  condition_l_key: "depth"
+  use_sampling: true
+  sample_rate: 0.10
+  sampling_mode: "uniform"
+  deterministic_sampling_for_train: true
+  deterministic_sampling_for_eval: true
+
+model:
+  use_aff: true
+  use_sampling: true
+  image_channels: 1
+  q_channels: 1
+  l_channels: 1
+  s_channels: 1
+  base_channels: 128
+  embed_dim: 64
+  transformer_dim: 128
+  transformer_heads: 4
+  transformer_mlp_dim: 256
+  transformer_depth: 2
+  out_channels: 1
+  aff:
+    hidden_dim: 16
+    temperature: 1.0
+
+diffusion:
+  # 200-step variance-rescaled linear DDPM. The terminal state is nearly Gaussian.
+  timesteps: 200
+  beta_schedule: "linear"
+  beta_start: 0.0005
+  beta_end: 0.10
+
+train:
+  epochs: 10
+  batch_size: 2
+  lr: 0.0001
+  weight_decay: 0.0
+  optimizer: "adam"
+  amp: true
+  device: "cuda"
+  device_ids: [0]
+  resume: false
+  resume_path: ""
+  grad_clip: 1.0
+  deterministic: false
+  output_dir: "outputs_pl_aff_uniform10_fullnoise_200"
+
+loss:
+  name: "mse"
+  reduction: "mean"
+
+log:
+  log_interval: 200
+  save_history: true
+  use_tensorboard: false
+  tensorboard_dir: "outputs_pl_aff_uniform10_fullnoise_200/tensorboard"
+
+checkpoint:
+  save_dir: "outputs_pl_aff_uniform10_fullnoise_200/checkpoints"
+  save_best_only: true
+
+logging:
+  log_dir: "outputs_pl_aff_uniform10_fullnoise_200/logs"
+
+eval:
+  batch_size: 1
+  save_dir: "outputs_pl_aff_uniform10_fullnoise_200/eval_results_full_noise"
+  mode: "sample_full_random_noise"
+  use_sampler: true
+  save_first_n: 10
+  enforce_measurement_consistency: true

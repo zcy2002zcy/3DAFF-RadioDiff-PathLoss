@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Environments and IDEs
+.venv/
+venv/
+.idea/
+.vscode/
+
+# Experiment artifacts
+outputs*/
+checkpoints/
+logs/
+tensorboard/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+metrics_per_sample.csv
+metrics_summary.csv
+
+# Local data and caches
+data/
+datasets_cache/
+cache/
+*.npz
+
+# OS files
+.DS_Store
+Thumbs.db
