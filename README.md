@@ -19,13 +19,16 @@ outputs so that it can be published directly on GitHub.
 - Diffusion: 200 linear steps, `beta_start=0.0005`, `beta_end=0.10`.
 - Training objective: noise-prediction MSE with a random diffusion timestep.
 - Evaluation: reverse DDPM sampling from independent `N(0, I)` noise.
-- Metrics: NMSE, RMSE, SSIM, and PSNR (`data_range=2`).
 - Measurement consistency: predictions at observed positions are replaced by the
-  corresponding authorized sparse measurements before the main metrics.
+  corresponding authorized sparse measurements before metric computation.
+- Metrics: NMSE, RMSE, SSIM, and PSNR (`data_range=2`) are computed over every
+  pixel of the final `256 x 256` slice, including observed and building pixels.
 
 The complete test target is not passed to the network. It is read to construct the
 authorized 10% observation map and to compute metrics. The unobserved 90% remains
-hidden from the model during evaluation.
+hidden from the model during evaluation. Because the observed values are enforced
+before full-slice metric computation, the reported scores measure the fidelity of
+the delivered measurement-consistent map; they are not unobserved-only errors.
 
 ## Repository Layout
 
